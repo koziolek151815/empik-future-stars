@@ -13,18 +13,14 @@ public class EmpikController {
         if (numbers.length() == 0) {
             return 0;
         }
+
         List<String> splittedString = Arrays.asList(numbers.split(","));
-
-        if (splittedString.size() >= 3) {
-            throw new RuntimeException("Wrong number of parameters");
+        int sum = 0;
+        for (String number : splittedString) {
+            int parsed = Integer.parseInt(number);
+            sum += parsed;
         }
-        if (splittedString.size() == 1) {
-            return Integer.parseInt(splittedString.get(0));
-        } else {
-            int a = Integer.parseInt(splittedString.get(0));
-            int b = Integer.parseInt(splittedString.get(1));
-
-            return a + b;
-        }
+        return sum;
     }
+
 }
