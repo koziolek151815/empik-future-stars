@@ -7,17 +7,27 @@ import java.util.List;
 
 @RestController
 public class EmpikController {
-
     @PostMapping
     public int Add(@RequestBody String numbers) {
-        if (numbers.length() == 0) {
-            return 0;
-        }
-        if (numbers.endsWith("\r\n")) {
-            throw new RuntimeException("Wrong delimiter");
-        }
+        if (numbers.startsWith("//")) {
+            String delimiter = numbers.substring(2, 3);
+            String stringToSplit = numbers.substring(5);
+            if (numbers.endsWith("\r\n")) {
+                throw new RuntimeException("Wrong delimiter");
+            }
+            List<String> splittedString = Arrays.asList(stringToSplit.split(delimiter + "|\r\n"));
+            return sumNumbersInList(splittedString);
 
-        List<String> splittedString = Arrays.asList(numbers.split(",|\r\n"));
+        } else {
+            if (numbers.length() == 0) {
+                return 0;
+            }
+            List<String> splittedString = Arrays.asList(numbers.split(";|\r\n"));
+            return sumNumbersInList(splittedString);
+        }
+    }
+
+    public int sumNumbersInList(List<String> splittedString) {
         int sum = 0;
         for (String number : splittedString) {
             int parsed = Integer.parseInt(number);
@@ -25,4 +35,5 @@ public class EmpikController {
         }
         return sum;
     }
+
 }
