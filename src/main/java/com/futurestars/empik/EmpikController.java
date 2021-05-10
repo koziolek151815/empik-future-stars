@@ -13,8 +13,11 @@ public class EmpikController {
         if (numbers.length() == 0) {
             return 0;
         }
+        if (numbers.endsWith("\r\n")) {
+            throw new RuntimeException("Wrong delimiter");
+        }
 
-        List<String> splittedString = Arrays.asList(numbers.split(","));
+        List<String> splittedString = Arrays.asList(numbers.split(",|\r\n"));
         int sum = 0;
         for (String number : splittedString) {
             int parsed = Integer.parseInt(number);
@@ -22,5 +25,4 @@ public class EmpikController {
         }
         return sum;
     }
-
 }
