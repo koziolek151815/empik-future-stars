@@ -37,6 +37,7 @@ public class EmpikController {
         int sum = 0;
         for (String number : splittedString) {
             int parsed = Integer.parseInt(number);
+            if (parsed >1000){continue;}
             if (parsed < 0) {
                 negatives.add(number);
             }
