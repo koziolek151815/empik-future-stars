@@ -10,7 +10,7 @@ public class EmpikController {
     @PostMapping
     public int Add(@RequestBody String numbers) {
         if (numbers.startsWith("//")) {
-            String delimiter = numbers.substring(2, 3);
+            String delimiter = "[" + numbers.substring(2, 3) + "]";
             String stringToSplit = numbers.substring(5);
             if (numbers.endsWith("\r\n")) {
                 throw new RuntimeException("Wrong delimiter");
