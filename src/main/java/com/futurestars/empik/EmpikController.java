@@ -4,12 +4,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @RestController
 public class EmpikController {
+    static Map<Integer, Integer> map;
+
+    static {
+        map = new HashMap<>();
+    }
+
     @PostMapping
     public ResponseEntity<?> Add(@RequestBody String numbers) {
         if (numbers.startsWith("//[")) {
@@ -35,7 +39,7 @@ public class EmpikController {
                 throw new RuntimeException("Wrong delimiter");
             }
             List<String> splittedString = Arrays.asList(stringToSplit.split(delimiter + "\r\n"));
-            return returnSumOrMessage(splittedString);
+            return returnSumWithMessage(splittedString);
 
         } else {
             if (numbers.length() == 0) {
@@ -44,11 +48,11 @@ public class EmpikController {
                         .body(0);
             }
             List<String> splittedString = Arrays.asList(numbers.split(";|\r\n"));
-            return returnSumOrMessage(splittedString);
+            return returnSumWithMessage(splittedString);
         }
     }
 
-    public ResponseEntity<?> returnSumOrMessage(List<String> splittedString) {
+    public ResponseEntity<?> returnSumWithMessage(List<String> splittedString) {
         List<String> negatives = new ArrayList<>();
         int sum = 0;
         for (String number : splittedString) {
@@ -62,9 +66,13 @@ public class EmpikController {
             sum += parsed;
         }
         if (negatives.isEmpty()) {
+
+            map.putIfAbsent(sum, -1);
+            map.put(sum, map.get(sum) + 1);
+
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(sum);
+                    .body(sum + " was returned " + map.get(sum) + " times so far");
 
         } else {
             return ResponseEntity
