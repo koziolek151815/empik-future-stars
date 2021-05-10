@@ -12,13 +12,18 @@ import java.util.List;
 public class EmpikController {
     @PostMapping
     public ResponseEntity<?> Add(@RequestBody String numbers) {
-        if (numbers.startsWith("//")) {
-            String delimiter = "[" + numbers.substring(2, 3) + "]";
-            String stringToSplit = numbers.substring(5);
-            if (numbers.endsWith("\r\n")) {
+        if (numbers.startsWith("//[")){
+            List<String> support = Arrays.asList(numbers.split("\r\n"));
+            String supportString = support.get(0);
+            if(!supportString.endsWith("]")){
+                throw new RuntimeException("Wrong format");
+            }
+            String delimiter = supportString.substring(3,supportString.length()-1);
+            String stringToSplit = numbers.substring(6+delimiter.length());
+            if (numbers.endsWith("\r\n")){
                 throw new RuntimeException("Wrong delimiter");
             }
-            List<String> splittedString = Arrays.asList(stringToSplit.split(delimiter + "|\r\n"));
+            List<String> splittedString = Arrays.asList(stringToSplit.split( "["+delimiter+ "]+"+"|\r\n"));
             return returnSumOrMessage(splittedString);
 
         } else {
